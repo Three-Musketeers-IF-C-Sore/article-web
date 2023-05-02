@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { css } from "../styles/styles";
 import Cards from "../components/card";
+import CreateDisplay from "../components/createdisplay";
 
 interface Props {};
 
@@ -27,16 +28,26 @@ export default function Home(props: Props) {
                     </div>
                 )}
             </div> */}
+            const [display, setDisplay] = useState(false);
+
+            const handleDisplay = () => {
+              setDisplay(!display);
+            };
+          
+            
 
     return (
         <div className={styles.body()}>
             <div className={styles.wrapper()}>
                 <div className={styles.topbar()}>
-                    <div className={styles.left()}>Add new article</div>
+                    <div className={styles.left()}><button onClick={handleDisplay}>Add new article</button></div>
                     <div className={styles.center()}>Article</div>
                     <div className={styles.right()}>Profile</div>
                 </div>
                 <div className={styles.content()}>
+                  {display && (
+                    <CreateDisplay message="This is the Create Display component" onClose={handleDisplay} />
+                  )}
                     <Cards title="" />
                     <Cards title="" />
                     <Cards title="" />

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { css } from "../styles/styles";
 import Cards from "../components/card";
+import axios from "axios";
 
 interface Props {};
 
@@ -17,6 +18,21 @@ export default function Home(props: Props) {
     //     console.log("styles.myDiv:", styles.myDiv);
     //     setShowDiv(false);
     // };
+
+    const [articles, setArticles] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingError, setIsLoadingError] = useState(false);
+
+    useEffect(() => {
+      axios.get('http://localhost:3021/api/articles')
+      .then((res) => {
+        setArticles(res.data.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoadingError(true);
+      })
+    }, []);
 
     {/* <div>
                 <button onClick={handleButtonClick}>Show Div</button>
@@ -37,15 +53,23 @@ export default function Home(props: Props) {
                     <div className={styles.right()}>Profile</div>
                 </div>
                 <div className={styles.content()}>
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
-                    <Cards title="" />
+                  {
+                    isLoadingError 
+                    ?
+                    "Loading error. \nPlease try again later"
+                    :
+                    (
+                      isLoading
+                      ?
+                      "Loading..."
+                      :
+                      articles.map((article: any, idx: any) => {
+                        return (
+                          <Cards title={article.title} />
+                        )
+                      })
+                    )
+                  }
                 </div>
             </div>
         </div>

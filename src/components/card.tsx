@@ -9,9 +9,6 @@ interface Props {
     // color?: string,
     // onClick: (e: any) => void,
 };
-
-
-  
     
 
 export default function Cards(props: Props){
@@ -49,10 +46,13 @@ const styles = {
         margin: 20
     }),
     topcard: css({
+        padding: 20,
         width: "300px",
         height: "250px",
         backgroundColor: "#6577a1",
-        borderRadius: 15
+        borderRadius: 15,
+        fontWeight: 600,
+        fontSize: 20
     }),
     bottomcard: css({
         height: "40px",

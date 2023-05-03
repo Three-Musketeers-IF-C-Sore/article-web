@@ -1,10 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import { css } from "../styles/styles";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+const { API_ENDPOINT } = require("../config");
 
 const RegImage = require("../assets/register.jpg")
 interface Props {};
 
 export default function Register(props: Props) {
+    const navigate = useNavigate();
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [cPassword, setCPassword] = useState("");
+
+    const handleNameOnChange = (e: any) => {
+        setName(e.target.value);
+    }
+    const handleEmailOnChange = (e: any) => {
+        setEmail(e.target.value);
+    }
+    const handlePasswordOnChange = (e: any) => {
+        setPassword(e.target.value);
+    }
+    const handleCPasswordOnChange = (e: any) => {
+        setCPassword(e.target.value);
+    }
+
+    const onRegisButtonClick = () => {
+        if (password !== cPassword) {
+            alert("Password does not match!");
+            setPassword('');
+            setCPassword('');
+            return;
+        }
+
+        axios.post(API_ENDPOINT + '/api/auth/register', {
+            name: name,
+            email: email,
+            password: password,
+        })
+        .then((res: any) => {
+            alert(res.data.message);
+            navigate('/login');
+        })
+        .catch((err) => {
+            if (err.response.status === 400) {
+                alert("Validation error: " + err.response.data.errors[0].msg);
+                return;
+            }
+            alert("Internal server error");
+        })
+    }
+
 
     return (
         <div className={styles.body()}>
@@ -12,13 +61,15 @@ export default function Register(props: Props) {
                 <div className={styles.left()}>
                     <div className={styles.title()}>Register</div>
                     <div className={styles.textbox()}>
+                    <label className={styles.inputtext()} htmlFor="Name">Name</label>
+                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Name" value={name} onChange={handleNameOnChange} /></div>
                         <label className={styles.inputtext()} htmlFor="Email">Email</label>
-                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Email" /></div>
+                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Email" value={email} onChange={handleEmailOnChange} /></div>
                         <label className={styles.inputtext()} htmlFor="Password">Password</label>
-                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Password" /></div>
-                        <label className={styles.inputtext()} htmlFor="Password">Confirm Password</label>
-                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Password" /></div>
-                        <button className={styles.loginbutton()}>Sign Up</button>
+                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="password" id="Password" value={password} onChange={handlePasswordOnChange} /></div>
+                        <label className={styles.inputtext()} htmlFor="CPassword">Confirm Password</label>
+                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="password" id="CPassword" value={cPassword} onChange={handleCPasswordOnChange} /></div>
+                        <button className={styles.loginbutton()} onClick={onRegisButtonClick}>Sign Up</button>
                         <div className={styles.signuptext()}>
                             Already have an account? <a href="/login" className={styles.href()}>Log In</a>
                         </div>

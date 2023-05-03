@@ -28,6 +28,7 @@ export default function Home(props: Props) {
     useEffect(() => {
       axios.get(API_ENDPOINT + '/api/articles')
       .then((res) => {
+        console.log(res.data.data);
         setArticles(res.data.data);
         setIsLoading(false);
       })
@@ -79,7 +80,9 @@ export default function Home(props: Props) {
                       :
                       articles.map((article: any, idx: any) => {
                         return (
-                          <Cards title={article.title} />
+                          <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
+                            <Cards title={article.title} />
+                          </a>
                         )
                       })
                     )

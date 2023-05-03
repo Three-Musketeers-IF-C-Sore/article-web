@@ -1,14 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { css } from "../styles/styles";
 import { IoChevronBack } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+const { API_ENDPOINT } = require("../config");
 
 interface Props {};
 
+interface User {
+  name: string,
+}
+interface ArticleModel {
+  title: string,
+  body: string,
+  user: User,
+};
 
 export default function Article(props: Props){
     const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState<ArticleModel>();
+    const { id } = useParams();
+    // const [query, data] = useQuery
+
+    useEffect(() => {
+      axios.get(API_ENDPOINT + '/api/articles/' + id)
+      .then((res: any) => {
+        setData(res.data.data);
+        setIsLoading(false);
+      })
+      .catch((err: any) => {
+        if (err) {
+          console.log(err);
+          alert("Internal server error");
+        }
+      });
+      console.log(isLoading);
+    }, [isLoading, id]);
 
     const goBackButton = () => {
         navigate("/");
@@ -16,19 +45,25 @@ export default function Article(props: Props){
 
     return(
         <div className={styles.body()}>
-            <div className={styles.wrapper()}>
+          {
+            data
+            ?
+              <div className={styles.wrapper()}>
                 <div className={styles.topbar()}>
                     <div style={{marginRight: 20}} onClick={goBackButton}><IoChevronBack /></div>
                     Article
                 </div>
                 <div className={styles.content()}>
-                  <div className={styles.title()}>Title</div>{/* untuk isi data title */}
-                  <div className={styles.author()}>Author</div>{/* untuk isi data author */}
+                  <div className={styles.title()}>{data.title}</div>{/* untuk isi data title */}
+                  <div className={styles.author()}>{data.user.name}</div>{/* untuk isi data author */}
                   <div className={styles.text()}>{/* untuk isi data author */}
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    {data.body}
                     </div>
                 </div>
             </div>
+            :
+            'loading...'
+          } 
         </div>
     )
 }

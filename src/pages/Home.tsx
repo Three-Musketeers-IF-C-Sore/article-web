@@ -104,6 +104,8 @@ const styles = {
         width: "100%",
         fontSize: 15,
         backgroundColor: "white",
+        fontFamily: "sans-serif-medium",
+        fontWeight: "bolder",
         padding: 25,
         display: "flex",
         borderBottom: "2px solid #E5E4E4"

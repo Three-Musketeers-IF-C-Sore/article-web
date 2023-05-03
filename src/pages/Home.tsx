@@ -28,7 +28,6 @@ export default function Home(props: Props) {
     useEffect(() => {
       axios.get(API_ENDPOINT + '/api/articles')
       .then((res) => {
-        console.log(res.data.data);
         setArticles(res.data.data);
         setIsLoading(false);
       })

@@ -32,11 +32,9 @@ export default function Article(props: Props){
       })
       .catch((err: any) => {
         if (err) {
-          console.log(err);
           alert("Internal server error");
         }
       });
-      console.log(isLoading);
     }, [isLoading, id]);
 
     const goBackButton = () => {

@@ -33,7 +33,6 @@ export default function CreateDisplay(props: Props){
 
     const handleSaveButtonClick = () => {
       let token = Cookie.get('token');
-      console.log(token);
       axios.post(API_ENDPOINT + '/api/articles', {
         title: title,
         body: content,

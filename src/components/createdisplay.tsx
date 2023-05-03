@@ -1,8 +1,12 @@
 import { css } from "../styles/styles";
 import GrClose from "react-icons/gr";
 import IoCloseOutline from "react-icons/io";
-import React from 'react';
+import React, { useState } from 'react';
 import Cards from "./card";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+const { API_ENDPOINT } = require("../config");
+const Cookie = require("js-cookie");
 
 interface Props {
   message: string;
@@ -10,6 +14,48 @@ interface Props {
 }
 
 export default function CreateDisplay(props: Props){
+
+  const navigate = useNavigate();
+
+    const [title, setTitle] = useState("");
+    // const [author, setAuthor] = useState("");
+    const [content, setContent] = useState("");
+
+    const handleTitleOnChange = (e: any) => {
+      setTitle(e.target.value);
+    }
+    // const handleAuthorOnChange = (e: any) => {
+    //   setAuthor(e.target.value);
+    // }
+    const handleContentOnChange = (e: any) => {
+      setContent(e.target.value);
+    }
+
+    const handleSaveButtonClick = () => {
+      let token = Cookie.get('token');
+      console.log(token);
+      axios.post(API_ENDPOINT + '/api/articles', {
+        title: title,
+        body: content,
+      }, {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
+      .then((res: any) => {
+        alert(res.data.message);
+        props.onClose();
+      })
+      .catch((err: any) => {
+        if (err.response.status === 401) {
+          alert(err.response.data.message);
+          navigate('/login');
+          return;
+        }
+        alert('Internal server error');
+      })
+    }
+
     return (
         <div className={styles.body()}>
           <div className={styles.container()}>
@@ -18,12 +64,12 @@ export default function CreateDisplay(props: Props){
             </button>
             <div className={styles.content()}>
               <label className={styles.label()} htmlFor="title">Title</label>
-              <input className={styles.input()} id="title" type="text" placeholder="Title ... "/>
-              <label className={styles.label()} htmlFor="author">Author</label>
-              <input className={styles.input()} id="author" type="text" placeholder="Author ... "/>
+              <input className={styles.input()} id="title" type="text" placeholder="Title ... " value={title} onChange={handleTitleOnChange} />
+              {/* <label className={styles.label()} htmlFor="author">Author</label>
+              <input className={styles.input()} id="author" type="text" placeholder="Author ... " value={author} onChange={handleAuthorOnChange} /> */}
               <label className={styles.label()} htmlFor="content">Content</label>
-              <textarea className={styles.textarea()} id="content" placeholder="Content ... "/>
-              <button className={styles.savebutton()} >Save</button>
+              <textarea className={styles.textarea()} id="content" placeholder="Content ... " value={content} onChange={handleContentOnChange} />
+              <button className={styles.savebutton()} onClick={handleSaveButtonClick}>Save</button>
             </div>
           </div>
             

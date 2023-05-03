@@ -29,7 +29,7 @@ export default function Register(props: Props) {
         })
         .then((res: any) => {
             alert('berhasil login');
-            Cookie.set(res.data.token);
+            Cookie.set('token', res.data.token);
             navigate('/');
         })
         .catch((err: any) => {

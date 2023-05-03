@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { css } from "../styles/styles";
-import { FaHeart, FaRegHeart, FaEdit, FaTrash } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaEdit, FaTrash, FaComment } from "react-icons/fa";
 
 interface Props {
     title: string,
@@ -29,6 +29,7 @@ export default function Cards(props: Props){
                             <FaRegHeart color="gray" size={25} style={{margin: "0 5"}} />
                         )}
                     </span>
+                    <span><FaComment color="gray" size={25} style={{margin: "0 5"}}/></span>
                     <span><FaEdit color="gray" size={25} style={{margin: "0 5"}}/></span>
                     <span><FaTrash color="gray" size={25} style={{margin: "0 5"}}/></span>
                 </div>

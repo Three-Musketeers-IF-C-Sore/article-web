@@ -62,7 +62,7 @@ export default function Home(props: Props) {
                 </div>
                 <div className={styles.content()}>
                   {display && (
-                    <CreateDisplay message="This is the Create Display component" onClose={handleDisplay} />
+                    <CreateDisplay onClose={handleDisplay} message={""} />
                   )}
                   {
                     isLoadingError 

@@ -4,6 +4,7 @@ import { css } from "../styles/styles";
 import Cards from "../components/card";
 import CreateDisplay from "../components/createdisplay";
 import axios from "axios";
+const { API_ENDPOINT } = require("../config");
 
 interface Props {};
 
@@ -25,7 +26,7 @@ export default function Home(props: Props) {
     const [isLoadingError, setIsLoadingError] = useState(false);
 
     useEffect(() => {
-      axios.get('http://localhost:3021/api/articles')
+      axios.get(API_ENDPOINT + '/api/articles')
       .then((res) => {
         setArticles(res.data.data);
         setIsLoading(false);
@@ -56,7 +57,9 @@ export default function Home(props: Props) {
         <div className={styles.body()}>
             <div className={styles.wrapper()}>
                 <div className={styles.topbar()}>
-                    <div className={styles.left()}><button onClick={handleDisplay}>Add new article</button></div>
+                    <div className={styles.left()}>
+                      <button onClick={handleDisplay}>Add new article</button>
+                    </div>
                     <div className={styles.center()}>Article</div>
                     <div className={styles.right()}>Profile</div>
                 </div>

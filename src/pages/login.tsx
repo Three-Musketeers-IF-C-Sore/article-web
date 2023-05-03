@@ -1,10 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { css } from "../styles/styles";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+const Cookie = require("js-cookie");
+const { API_ENDPOINT } = require("../config");
 
 const LoginImage = require("../assets/login.jpg")
 interface Props {};
 
 export default function Register(props: Props) {
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleEmailOnChange = (e: any) => {
+        setEmail(e.target.value);
+    }
+    const handlePasswordOnChange = (e: any) => {
+        setPassword(e.target.value);
+    }
+
+
+    const handleLoginButtonClick = () => {
+        axios.post(API_ENDPOINT + '/api/auth/login', {
+            email: email,
+            password: password,
+        })
+        .then((res: any) => {
+            alert('berhasil login');
+            Cookie.set(res.data.token);
+            navigate('/');
+        })
+        .catch((err: any) => {
+            alert(err.response.data.message);
+            setPassword('');
+        });
+    }
 
     return (
         <div className={styles.body()}>
@@ -16,10 +48,10 @@ export default function Register(props: Props) {
                     <div className={styles.title()}>Login</div>
                     <div className={styles.textbox()}>
                         <label className={styles.inputtext()} htmlFor="Email">Email</label>
-                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Email" /></div>
+                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Email" value={email} onChange={handleEmailOnChange} /></div>
                         <label className={styles.inputtext()} htmlFor="Password">Password</label>
-                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="text" id="Password" /></div>
-                        <button className={styles.loginbutton()}>Log In</button>
+                        <div className={styles.inputtextbox()}><input style={{ width: "100%", height: 39, outline: "none", borderRadius: 4, border: "none"}} type="password" id="Password" value={password} onChange={handlePasswordOnChange} /></div>
+                        <button className={styles.loginbutton()} onClick={handleLoginButtonClick}>Log In</button>
                         <div className={styles.signuptext()}>
                             Don't have an account? <a href="/register" className={styles.href()}>Sign Up</a>
                         </div>

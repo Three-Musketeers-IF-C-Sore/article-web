@@ -54,7 +54,7 @@ export default function MyArticle(props: Props) {
                       articles.map((article: any, idx: any) => {
                         return (
                           <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards title={article.title} />
+                            <Cards title={article.title} id={""} />
                           </a>
                         )
                       })

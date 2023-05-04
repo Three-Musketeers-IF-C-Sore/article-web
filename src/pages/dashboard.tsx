@@ -79,7 +79,6 @@ const styles = {
       topbar: css({
         height: 90,
         width: "100%",
-        
         backgroundColor: "white",
         padding: 25,
         borderBottom: "2px solid #E5E4E4",

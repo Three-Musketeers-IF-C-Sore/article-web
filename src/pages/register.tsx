@@ -125,7 +125,7 @@ const styles = {
         display: "block",
         width: "80%",
         margin: "0 auto",
-        marginTop: 60,
+        marginTop: 20,
     }),
     inputtext: css({
         margin: 5,
@@ -152,7 +152,7 @@ const styles = {
         fontSize: 14,
         margin: "0 auto",
         textAlign: "center",
-        marginTop: 80,
+        marginTop: 40,
     }),
     href: css({
         color: "white",

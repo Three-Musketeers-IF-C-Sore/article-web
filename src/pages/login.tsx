@@ -8,7 +8,7 @@ const { API_ENDPOINT } = require("../config");
 const LoginImage = require("../assets/login.jpg")
 interface Props {};
 
-export default function Register(props: Props) {
+export default function Login(props: Props) {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -33,7 +33,8 @@ export default function Register(props: Props) {
             navigate('/');
         })
         .catch((err: any) => {
-            alert(err.response.data.message);
+            // alert(err.response.data.message);
+            alert(err)
             setPassword('');
         });
     }

@@ -4,24 +4,11 @@ import { css } from "../styles/styles";
 import Cards from "../components/card";
 import CreateDisplay from "../components/createdisplay";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 const { API_ENDPOINT } = require("../config");
 
 interface Props {};
 
-export default function Home(props: Props) {
-    // const [showDiv, setShowDiv] = useState(false);
-
-    // const handleButtonClick = () => {
-    //     console.log("styles.myDiv:", styles.myDiv);
-    //     setShowDiv(true);
-    // };
-
-    // const handleButtonClickAgain = () => {
-    //     console.log("styles.myDiv:", styles.myDiv);
-    //     setShowDiv(false);
-    // };
-
+export default function MyArticle(props: Props) {
     const [articles, setArticles] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingError, setIsLoadingError] = useState(false);
@@ -37,26 +24,19 @@ export default function Home(props: Props) {
       })
     }, []);
 
-
     const [display, setDisplay] = useState(false);
 
     const handleDisplay = () => {
-      setDisplay(!display);
-    };
-          
-    const navigate = useNavigate();
-
-    const goDashboard = () => {
-      navigate("/dashboard");
+        setDisplay(!display);
     };
 
     return (
         <div className={styles.body()}>
             <div className={styles.wrapper()}>
                 <div className={styles.topbar()}>
-                    <div className={styles.center()}>Article</div>
-                    <div className={styles.right()} onClick={goDashboard}>Dashboard</div>
+                    <div className={styles.center()}>My Article</div>
                 </div>
+                <div className={styles.button()}><button style={{marginLeft: "auto", width: "100px", height: "30px", backgroundColor: "#2de81c", borderRadius: 10, border: "none", color: "white"}} onClick={handleDisplay}>Add New</button></div>
                 <div className={styles.content()}>
                   {display && (
                     <CreateDisplay onClose={handleDisplay} message={""} />
@@ -88,44 +68,45 @@ export default function Home(props: Props) {
 
 const styles = {
     body: css({
-        backgroundColor: "white",
-        height: '100vh',
-        display: 'flex',
-        margin: '0 auto',
+      backgroundColor: "white",
+      height: "100vh",
+      fontFamily: "Helvetica",
+      display: "flex",
+      margin: "0 auto"
     }),
-      wrapper: css({
-        display: "block",
-        width: "100%"
-      }),
-      topbar: css({
-        height: 90,
-        width: "100%",
-        backgroundColor: "white",
-        padding: 25,
-        borderBottom: "2px solid #E5E4E4",
-        display: "flex",
-      }),
-      center: css({
-        fontSize: 50,
-        fontWeight: "bolder",
-        margin: "0 auto",
-        marginLeft: "auto",
-        marginRight: "60",
-        alignItems: "center"
-      }),
-      right: css({
-        marginRight: 0,
-        marginLeft: "60",
-        fontsize: 50,
-      }),
-      content: css({
-        width: 1200,
-        height: "90%",
-        margin: "0 auto",
-        padding: 15,
-        paddingTop: 10,
-        display: "flex",
-        flexWrap: "wrap",
-      })
-}
-
+    wrapper: css({
+      display: "block",
+      width: "100%"
+    }),
+    topbar: css({
+      height: "10%",
+      width: "100%",
+      fontSize: 15,
+      backgroundColor: "white",
+      fontFamily: "sans-serif-medium",
+      fontWeight: "bolder",
+      padding: 25,
+      display: "flex"
+    }),
+    center: css({
+      fontSize: 34,
+      fontWeight: "bolder",
+      margin: "0 auto"
+    }),
+    button: css({
+      margin: "0 auto",
+      paddingRight: 70,
+      width: 1200,
+      display: "flex",
+      justifyContent: "flex-end",
+    }),
+    content: css({
+      width: 1200,
+      height: "90%",
+      margin: "0 auto",
+      padding: 15,
+      paddingTop: 10,
+      display: "flex",
+      flexWrap: "wrap",
+    })
+  };

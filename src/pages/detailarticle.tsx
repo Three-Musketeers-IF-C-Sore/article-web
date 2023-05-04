@@ -53,12 +53,24 @@ export default function Article(props: Props){
                 </div>
                 <div className={styles.content()}>
                   <div className={styles.title()}>{data.title}</div>{/* untuk isi data title */}
-                  <div className={styles.author()}>{data.user.name}</div>{/* untuk isi data author */}
+                  <div className={styles.author()}>
+                    Created by: {data.user.name}
+                  </div>{/* untuk isi data author */}
                   <div className={styles.text()}>{/* untuk isi data author */}
                     {data.body}
+                  </div>
+                  <hr style={{marginTop: 30, marginBottom: 30}} />
+                  <div className={styles.comment()}>
+                    <div className={styles.comtitle()}>Comments</div>
+                    <textarea className={styles.textarea()} name="Comment" placeholder="Write your comment ...">
+                      
+                    </textarea>
+                    <div className={styles.commentlist()}>
+                      {/* List comments yang sudah ditulis bakalan muncul disini */}
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
             :
             'loading...'
           } 
@@ -76,7 +88,7 @@ const styles = {
     }),
     wrapper: css({
         display: "block",
-        width: "100%"
+        width: "100%",
       }),
       topbar: css({
         height: 90,
@@ -90,25 +102,55 @@ const styles = {
       }),
       content: css({
         width: "82%",
-        height: "90%",
+        height: "auto",
         margin: "0 auto",
         padding: 30,
+        paddingLeft: 70,
+        paddingRight: 70,
         display: "block",
         flexWrap: "wrap",
+        backgroundColor: "rgb(0,0,0,0.2)"
       }),
       title: css({
         fontSize: 50,
         fontWeight: "bolder",
         marginTop: 10,
-        marginBottom: 6
+        marginBottom: 6,
+        marginLeft: "auto",
+        marginRight: "auto",
+        textAlign: "center"
       }),
       author: css({
         fontsize: 15,
         fontWeight: "lighter",
-        marginLeft: 5
+        marginLeft: "auto",
+        marginRight: "auto",
+        textAlign: "center",
       }),
       text: css({
         marginTop: 50,
+        fontSize: 20,
+        textAlign: "justify"
+      }),
+      comtitle: css({
+        fontSize: 25,
+        fontWeight: "bold",
+      }),
+      comment: css({
+        
+      }),
+      textarea: css({
+        display: "block",
+        width: "100%",
+        padding: 10,
+        marginTop: 10,
+        height: 100 ,
+        resize: "none",
+        border: "none",
+        outline: "none",
+        borderRadius: 5,
+      }),
+      commentlist: css({
         fontSize: 20,
         textAlign: "justify"
       })

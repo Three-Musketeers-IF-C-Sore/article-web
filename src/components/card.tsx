@@ -29,9 +29,6 @@ export default function Cards(props: Props){
                             <FaRegHeart color="gray" size={25} style={{margin: "0 5"}} />
                         )}
                     </span>
-                    <span><FaComment color="gray" size={25} style={{margin: "0 5"}}/></span>
-                    <span><FaEdit color="gray" size={25} style={{margin: "0 5"}}/></span>
-                    <span><FaTrash color="gray" size={25} style={{margin: "0 5"}}/></span>
                 </div>
                 
             </div>
@@ -42,14 +39,14 @@ export default function Cards(props: Props){
 const styles = {
     card: css({
         display: "block",
-        width: "300px",
-        height: "300px",
+        width: "250px",
+        height: "250px",
         margin: 20
     }),
     topcard: css({
         padding: 20,
-        width: "300px",
-        height: "250px",
+        width: "250px",
+        height: "200px",
         backgroundColor: "#6577a1",
         borderRadius: 15,
         fontWeight: 600,

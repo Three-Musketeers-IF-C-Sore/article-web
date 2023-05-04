@@ -5,7 +5,7 @@ import { FaHeart, FaRegHeart, FaEdit, FaTrash, FaComment } from "react-icons/fa"
 
 interface Props {
     title: string,
-    // id: string,
+    id: string,
     // color?: string,
     // onClick: (e: any) => void,
 };
@@ -19,7 +19,9 @@ export default function Cards(props: Props){
     };
     return(
         <div className={styles.card()}>
-            <div className={styles.topcard()}>{props.title}</div>
+            <a href={"/articles/" + props.id} style={{ color: 'black', textDecoration: 'none' }}>
+                <div className={styles.topcard()}>{props.title}</div>
+            </a>
             <div className={styles.bottomcard()}>
                 <div className={styles.component()}>
                     <span onClick={handleClick}>

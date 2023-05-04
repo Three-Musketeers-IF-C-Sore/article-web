@@ -25,6 +25,12 @@ export default function Home(props: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingError, setIsLoadingError] = useState(false);
 
+    const [display, setDisplay] = useState(false);
+
+    const handleDisplay = () => {
+      setDisplay(!display);
+    };
+
     useEffect(() => {
       axios.get(API_ENDPOINT + '/api/articles')
       .then((res) => {
@@ -34,7 +40,7 @@ export default function Home(props: Props) {
       .catch((err) => {
         setIsLoadingError(true);
       })
-    }, []);
+    }, [display]);
 
     {/* <div>
                 <button onClick={handleButtonClick}>Show Div</button>
@@ -45,11 +51,7 @@ export default function Home(props: Props) {
                     </div>
                 )}
             </div> */}
-            const [display, setDisplay] = useState(false);
-
-            const handleDisplay = () => {
-              setDisplay(!display);
-            };
+            
           
             
 
@@ -79,9 +81,7 @@ export default function Home(props: Props) {
                       :
                       articles.map((article: any, idx: any) => {
                         return (
-                          <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards title={article.title} />
-                          </a>
+                            <Cards id={article.id} title={article.title} />
                         )
                       })
                     )

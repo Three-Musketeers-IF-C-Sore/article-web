@@ -1,8 +1,5 @@
 import { css } from "../styles/styles";
-import GrClose from "react-icons/gr";
-import IoCloseOutline from "react-icons/io";
 import React, { useState } from 'react';
-import Cards from "./card";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const { API_ENDPOINT } = require("../config");
@@ -32,7 +29,6 @@ export default function CreateDisplay(props: Props){
     }
 
     const handleSaveButtonClick = () => {
-      let token = Cookie.get('token');
       axios.post(API_ENDPOINT + '/api/articles', {
         title: title,
         body: content,

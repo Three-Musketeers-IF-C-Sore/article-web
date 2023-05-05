@@ -44,7 +44,7 @@ export default function FavArticle(props: Props) {
                       articles.map((article: any, idx: any) => {
                         return (
                           <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards title={article.title} id={""} />
+                            <Cards title={article.title} id={""} component={""} />
                           </a>
                         )
                       })
@@ -58,11 +58,10 @@ export default function FavArticle(props: Props) {
 
 const styles = {
     body: css({
-        backgroundColor: "white",
-        height: '100vh',
-        fontFamily: 'Helvetica',
-        display: 'flex',
-        margin: '0 auto',
+      backgroundColor: "#F5F5F5",
+      height: '100vh',
+      display: 'flex',
+      margin: '0 auto',
     }),
       wrapper: css({
         display: "block",
@@ -72,7 +71,7 @@ const styles = {
         height: "10%",
         width: "100%",
         fontSize: 15,
-        backgroundColor: "white",
+        backgroundColor: "#F5F5F5",
         fontFamily: "sans-serif-medium",
         fontWeight: "bolder",
         padding: 25,
@@ -84,13 +83,17 @@ const styles = {
         margin: "0 auto",
       }),
       content: css({
-        width: 1200,
-        height: "90%",
+        maxWidth: 1200,
+        width: "100%",
+        height: "calc(100% - 120px)", // subtract height of topbar
         margin: "0 auto",
-        padding: 15,
-        paddingTop: 10,
-        display: "flex",
-        flexWrap: "wrap",
+        padding: "15px 0",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+        gridGap: 20,
+        "@media screen and (max-width: 768px)": {
+        gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+      }
       })
 }
 

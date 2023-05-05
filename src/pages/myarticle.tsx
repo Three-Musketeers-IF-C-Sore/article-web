@@ -4,6 +4,7 @@ import { css } from "../styles/styles";
 import Cards from "../components/card";
 import CreateDisplay from "../components/createdisplay";
 import axios from "axios";
+import EditDisplay from "../components/editarticle";
 const { API_ENDPOINT } = require("../config");
 
 interface Props {};
@@ -30,17 +31,25 @@ export default function MyArticle(props: Props) {
         setDisplay(!display);
     };
 
+    const deleteArticle = () => {
+      alert("deleted :)");
+    };
+
     return (
         <div className={styles.body()}>
             <div className={styles.wrapper()}>
                 <div className={styles.topbar()}>
                     <div className={styles.center()}>My Article</div>
                 </div>
-                <div className={styles.button()}><button style={{marginLeft: "auto", width: "100px", height: "30px", backgroundColor: "#2de81c", borderRadius: 10, border: "none", color: "white"}} onClick={handleDisplay}>Add New</button></div>
+                <div className={styles.button()}><button className={styles.buttonstyle()} onClick={handleDisplay}>Add New</button></div>
                 <div className={styles.content()}>
                   {display && (
                     <CreateDisplay onClose={handleDisplay} message={""} />
                   )}
+
+                  {
+                    display && <EditDisplay onClose={handleDisplay} message={""} articleId={""} />
+                  }
                   {
                     isLoadingError 
                     ?
@@ -54,7 +63,7 @@ export default function MyArticle(props: Props) {
                       articles.map((article: any, idx: any) => {
                         return (
                           <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards title={article.title} id={""} />
+                            <Cards title={article.title} id={""} component={"edit"} onDelete={deleteArticle} onEdit={handleDisplay}/>
                           </a>
                         )
                       })
@@ -68,11 +77,10 @@ export default function MyArticle(props: Props) {
 
 const styles = {
     body: css({
-      backgroundColor: "white",
-      height: "100vh",
-      fontFamily: "Helvetica",
-      display: "flex",
-      margin: "0 auto"
+      backgroundColor: "#F5F5F5",
+      height: '100vh',
+      display: 'flex',
+      margin: '0 auto',
     }),
     wrapper: css({
       display: "block",
@@ -82,7 +90,8 @@ const styles = {
       height: "10%",
       width: "100%",
       fontSize: 15,
-      backgroundColor: "white",
+      backgroundColor: "#F5F5F5",
+
       fontFamily: "sans-serif-medium",
       fontWeight: "bolder",
       padding: 25,
@@ -100,13 +109,27 @@ const styles = {
       display: "flex",
       justifyContent: "flex-end",
     }),
+    buttonstyle: css({
+      marginLeft: "auto", 
+      width: "100px", 
+      height: "30px", 
+      backgroundColor: "#2de81c", 
+      borderRadius: 10, 
+      border: "none", 
+      color: "white",
+      "&:hover": {backgroundColor: "#148709"}
+    }),
     content: css({
-      width: 1200,
-      height: "90%",
+      maxWidth: 1200,
+      width: "100%",
+      height: "calc(100% - 120px)", // subtract height of topbar
       margin: "0 auto",
-      padding: 15,
-      paddingTop: 10,
-      display: "flex",
-      flexWrap: "wrap",
+      padding: "15px 0",
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+      gridGap: 20,
+      "@media screen and (max-width: 768px)": {
+      gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    }
     })
   };

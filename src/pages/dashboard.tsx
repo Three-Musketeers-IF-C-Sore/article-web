@@ -46,19 +46,19 @@ export default function Dashboard(props: Props) {
               >
                 My Articles
               </div>
-              <div
+              {/* <div
                 className={`${styles.elements()} ${
                   selected === "Favourite Articles" ? styles.selected : ""
                 }`}
                 onClick={() => handleSelect("Favourite Articles")}
               >
                 Favourite Articles
-              </div>
+              </div> */}
             </div>
           </div>
           <div className={styles.content()}>
             {selected === "My Articles" && <div><MyArticle /></div>}
-            {selected === "Favourite Articles" && <div><FavArticle /></div>}
+            {/* {selected === "Favourite Articles" && <div><FavArticle /></div>} */}
           </div>
         </div>
       </div>

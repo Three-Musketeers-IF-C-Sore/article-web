@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { css } from "../styles/styles";
-import { FaHeart, FaRegHeart, FaEdit, FaTrash } from "react-icons/fa";
-
+import { FaHeart, FaRegHeart, FaEdit, FaTrash, FaComment } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     title: string,
@@ -10,6 +10,7 @@ interface Props {
     component?: string,
     onEdit: () => void;
     onDelete: () => void;
+    isLogged: boolean,
     // color?: string,
     // onClick: (e: any) => void,
 };
@@ -22,10 +23,16 @@ Cards.defaultProps = {
     
 
 export default function Cards(props: Props){
+    const navigate = useNavigate();
+
     const [liked, setLiked] = useState(false);
   
     const handleClick = () => {
-      setLiked(!liked);
+        if (!props.isLogged) {
+            navigate('/login');
+        } else {
+            setLiked(!liked);
+        }
     };
 
 

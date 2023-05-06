@@ -18,7 +18,7 @@ export default function Router() {
                 <Route element={<Article />} path={"/articles/:id"} />
                 <Route element={<Dashboard />} path={"/dashboard"} />
                 <Route element={<FavArticle />} path={"/favarticle"} />
-                <Route element={<MyArticle />} path={"/myarticle"} />
+                {/* <Route element={<MyArticle />} path={"/myarticle"} /> */}
             </Routes>
         </BrowserRouter>
     );

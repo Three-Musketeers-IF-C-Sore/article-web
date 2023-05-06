@@ -6,7 +6,8 @@ import CreateDisplay from "../components/createdisplay";
 import axios from "axios";
 const { API_ENDPOINT } = require("../config");
 
-interface Props {};
+interface Props {
+};
 
 export default function FavArticle(props: Props) {
     const [articles, setArticles] = useState([]);
@@ -44,7 +45,7 @@ export default function FavArticle(props: Props) {
                       articles.map((article: any, idx: any) => {
                         return (
                           <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards title={article.title} id={""} component={""} />
+                            <Cards isLogged={true} title={article.title} id={""} component={""} />
                           </a>
                         )
                       })

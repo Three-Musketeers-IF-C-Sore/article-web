@@ -14,6 +14,12 @@ export default function MyArticle(props: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingError, setIsLoadingError] = useState(false);
 
+    const [filterFavorite, setFilterFavorite] = useState(false);
+
+    const onFilterChange = (e: any) => {
+      setFilterFavorite(e.target.checked);
+    }
+
     useEffect(() => {
       axios.get(API_ENDPOINT + '/api/articles')
       .then((res) => {
@@ -42,6 +48,12 @@ export default function MyArticle(props: Props) {
                     <div className={styles.center()}>My Article</div>
                 </div>
                 <div className={styles.button()}><button className={styles.buttonstyle()} onClick={handleDisplay}>Add New</button></div>
+                <div className={styles.filter()}>
+                  <input name="filter" id="filter" className={styles.checkbox()} type="checkbox" checked={filterFavorite} onChange={onFilterChange} />
+                  <label htmlFor="filter" style={{marginLeft: 8}}>Filter favorite</label>
+                </div>
+
+                <div className={styles.button()}><button style={{marginLeft: "auto", width: "100px", height: "30px", backgroundColor: "#2de81c", borderRadius: 10, border: "none", color: "white"}} onClick={handleDisplay}>Add New</button></div>
                 <div className={styles.content()}>
                   {display && (
                     <CreateDisplay onClose={handleDisplay} message={""} />
@@ -62,9 +74,7 @@ export default function MyArticle(props: Props) {
                       :
                       articles.map((article: any, idx: any) => {
                         return (
-                          <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards title={article.title} id={""} component={"edit"} onDelete={deleteArticle} onEdit={handleDisplay}/>
-                          </a>
+                            <Cards isLogged={true} title={article.title} id={article.id} component={"edit"} onDelete={deleteArticle} onEdit={handleDisplay}/>
                         )
                       })
                     )
@@ -130,6 +140,18 @@ const styles = {
       gridGap: 20,
       "@media screen and (max-width: 768px)": {
       gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-    }
+    },
+      padding: 15,
+      paddingTop: 10,
+      display: "flex",
+      flexWrap: "wrap",
+    }),
+    filter: css({
+      marginLeft: 450,
+    }),
+    checkbox: css({
+      background: "yellow",
+      margin: "0 auto",
+>>>>>>> Stashed changes
     })
   };

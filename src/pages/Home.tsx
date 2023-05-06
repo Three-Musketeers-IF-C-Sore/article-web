@@ -7,6 +7,7 @@ import { HiOutlineViewList } from "react-icons/hi";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const { API_ENDPOINT } = require("../config");
+const Cookie = require("js-cookie");
 
 interface Props {};
 
@@ -26,12 +27,27 @@ export default function Home(props: Props) {
     const [articles, setArticles] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingError, setIsLoadingError] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
 
     const [display, setDisplay] = useState(false);
 
     const handleDisplay = () => {
       setDisplay(!display);
     };
+
+    useEffect(() => {
+      axios.get(API_ENDPOINT + '/api/auth/auth', {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
+      .then((res) => {
+        setIsLogged(true);
+      })
+      .catch((err) => {
+        setIsLogged(false);
+      })
+    }, []);
 
     useEffect(() => {
       axios.get(API_ENDPOINT + '/api/articles')
@@ -63,6 +79,11 @@ export default function Home(props: Props) {
 
     const goLogin = () => {
       navigate("/login");
+    };
+
+    const logout = () => {
+      Cookie.set('token', undefined);
+      setIsLogged(false);
     }
 
     return (
@@ -82,6 +103,18 @@ export default function Home(props: Props) {
                     <div className={styles.right()} >
                       <div className={styles.elements()} onClick={goLogin}>Log Out</div>
                     </div>
+                    <div className={styles.center()}>Article</div>
+                    {
+                      isLogged 
+                      ?
+                      <>
+                      <div className={styles.right()} onClick={goDashboard}>Dashboard</div>
+                      <span style={{ width: 20 }}></span>
+                      <div className={styles.right()} onClick={logout}>Logout</div>
+                      </>
+                      :
+                      <div className={styles.right()} onClick={goLogin}>Login</div>
+                    }
                 </div>
                 <div className={styles.content()}>
                   {display && (
@@ -99,7 +132,7 @@ export default function Home(props: Props) {
                       :
                       articles.map((article: any, idx: any) => {
                         return (
-                            <Cards id={article.id} title={article.title} component={""} />
+                            <Cards isLogged={isLogged} id={article.id} title={article.title} component={""} />
                         )
                       })
                     )

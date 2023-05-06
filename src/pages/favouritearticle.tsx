@@ -45,7 +45,7 @@ export default function FavArticle(props: Props) {
                       articles.map((article: any, idx: any) => {
                         return (
                           <a href={"/articles/" + article.id} style={{ color: 'black', textDecoration: 'none' }}>
-                            <Cards isLogged={true} title={article.title} id={""} component={""} />
+                            <Cards isLiked={true} isLogged={true} title={article.title} id={""} component={""} />
                           </a>
                         )
                       })

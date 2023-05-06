@@ -9,19 +9,19 @@ interface Props {
   message: string;
   onClose: () => void;
   articleId: string; // tambahkan prop untuk mengambil id artikel
+  data: any;
 }
 
 export default function EditDisplay(props: Props){
 
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  // const [author, setAuthor] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(props.data.title);
+  const [content, setContent] = useState(props.data.body);
 
   useEffect(() => {
     // ambil data artikel yang akan di-edit dari API
-    axios.get(API_ENDPOINT + '/api/articles/' + props.articleId, {
+    axios.get(API_ENDPOINT + '/api/dashboard/articles/' + props.data.id, {
       headers: {
         'Authorization': Cookie.get('token'),
       }
@@ -38,22 +38,19 @@ export default function EditDisplay(props: Props){
       }
       alert('Internal server error');
     })
-  }, [props.articleId]); // update useEffect hanya ketika props.articleId berubah
+  }, [props.data, navigate]); // update useEffect hanya ketika props.articleId berubah
 
   const handleTitleOnChange = (e: any) => {
     setTitle(e.target.value);
   }
-  // const handleAuthorOnChange = (e: any) => {
-  //   setAuthor(e.target.value);
-  // }
   const handleContentOnChange = (e: any) => {
     setContent(e.target.value);
   }
 
   const handleSaveButtonClick = () => {
-    axios.put(API_ENDPOINT + '/api/articles/' + props.articleId, {
-      title: title,
-      body: content,
+    axios.put(API_ENDPOINT + '/api/dashboard/articles/' + props.data.id, {
+      title: title ?? props.data.title,
+      body: content ?? props.data.body,
     }, {
       headers: {
         'Authorization': Cookie.get('token'),

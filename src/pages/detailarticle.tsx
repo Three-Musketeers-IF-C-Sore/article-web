@@ -3,26 +3,94 @@ import axios from "axios";
 import { css } from "../styles/styles";
 import { IoChevronBack } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import EditDisplay from "../components/editarticle";
 const { API_ENDPOINT } = require("../config");
+const Cookie = require("js-cookie");
 
 interface Props {};
 
 interface User {
+  id: string,
   name: string,
+}
+interface Comment {
+  id: string,
+  user: User,
+  text: string,
 }
 interface ArticleModel {
   title: string,
   body: string,
-  user: User,
+  author: User,
+  comments: Comment[],
 };
 
 export default function Article(props: Props){
     const navigate = useNavigate();
 
+    const [userId, setUserId] = useState();
+
+    useEffect(() => {
+      axios.get(API_ENDPOINT + '/api/auth/auth', {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
+      .then((res) => {
+        setUserId(res.data.user.id);
+      })
+      .catch((err) => {
+      })
+    }, []);
+
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<ArticleModel>();
+    const [commentInput, setCommentInput] = useState("");
     const { id } = useParams();
     // const [query, data] = useQuery
+
+    const [editDisplay, setEditDisplay] = useState(false);
+    const handleEditDisplay = () => {
+      setEditDisplay(!editDisplay);
+    };
+    const afterEdited = () => {
+      setIsLoading(true);
+      handleEditDisplay();
+    }
+
+    const handleCommentInputOnChange = (e: any) => {
+      setCommentInput(e.target.value);
+    }
+
+    const handleSendComment = () => {
+      if (commentInput === '') alert("comment is required");
+      setCommentInput("");
+      setIsLoading(true);
+      axios.post(API_ENDPOINT + '/api/articles/comments/' + id, {
+        text: commentInput,
+      }, {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
+    }
+
+    const deleteComment = (e: any) => {
+      let commentId = e.target.parentNode.id;
+      axios.delete(API_ENDPOINT + '/api/articles/comments/' + commentId, {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
+      .then((res) => {
+        setIsLoading(true);
+        alert("comment deleted");
+      })
+      .catch((err) => {
+        alert("internal server error");
+      })
+    }
 
     useEffect(() => {
       axios.get(API_ENDPOINT + '/api/articles/' + id)
@@ -31,9 +99,8 @@ export default function Article(props: Props){
         setIsLoading(false);
       })
       .catch((err: any) => {
-        if (err) {
+        console.log(err);
           alert("Internal server error");
-        }
       });
     }, [isLoading, id]);
 
@@ -54,17 +121,46 @@ export default function Article(props: Props){
                 <div className={styles.content()}>
                   <div className={styles.title()}>{data.title}</div>{/* untuk isi data title */}
                   <div className={styles.author()}>
-                    Created by: {data.user.name}
+                    Created by: {data.author.name}
                   </div>{/* untuk isi data author */}
+                  <span onClick={handleEditDisplay}>
+                    <FaEdit color="gray" size={25} style={{margin: "0 5"}} />
+                  </span>
                   <div className={styles.text()}>{/* untuk isi data author */}
                     {data.body}
                   </div>
                   <hr style={{marginTop: 30, marginBottom: 30}} />
                   <div className={styles.comment()}>
                     <div className={styles.comtitle()}>Comments</div>
-                    <textarea className={styles.textarea()} name="Comment" placeholder="Write your comment ...">
+
+                    <div className={styles.commentlist()}>
+                      {
+                        data.comments.map((item, idx) => {
+                          console.log(item.user.id, userId);
+                          return (
+                            <div className={styles.commentDiv()} id={item.id}>
+                              <p className={styles.comment()} key={idx}>{item.text}</p>
+                              {
+                                item.user.id === userId
+                                ?
+                                <button onClick={deleteComment}>
+                                  Delete
+                                </button>
+                                :
+                                <></>
+                              }
+                              
+                            </div>
+                          );
+                        })
+                      }
+                    </div>
+                    
+                    <div className={styles.row()}>
+                      <input className={styles.input()} name="Comment" placeholder="Write your comment ..." value={commentInput} onChange={handleCommentInputOnChange} />
+                      <button className={styles.button()} onClick={handleSendComment}>Send</button>
+                    </div>
                       
-                    </textarea>
                     <div className={styles.commentlist()}>
                       {/* List comments yang sudah ditulis bakalan muncul disini */}
                     </div>
@@ -74,7 +170,11 @@ export default function Article(props: Props){
             :
             'loading...'
           } 
+          {
+            editDisplay && <EditDisplay data={data} onClose={afterEdited} message={""} articleId={""} />
+          }
         </div>
+                    
     )
 }
 
@@ -136,22 +236,36 @@ const styles = {
         fontSize: 25,
         fontWeight: "bold",
       }),
-      comment: css({
-        
+      commentDiv: css({
+        display: "flex",
+        alignItems: "center",
       }),
-      textarea: css({
+      comment: css({
+        marginRight: 12,
+      }),
+      commentlist: css({
+        margin: "30px 0",
+        textAlign: "justify"
+      }),
+      row: css({
+        width: "100%",
+        display: "flex",
+        height: 40,
+        marginTop: 10,
+      }),
+      input: css({
         display: "block",
         width: "100%",
-        padding: 10,
-        marginTop: 10,
-        height: 100 ,
         resize: "none",
         border: "none",
         outline: "none",
         borderRadius: 5,
+        height: 36,
+        padding: "0 12px",
+        boxSizing: "border-box",
       }),
-      commentlist: css({
-        fontSize: 20,
-        textAlign: "justify"
-      })
+      button: css({
+        marginLeft: 8,
+        height: 36,
+      }),
 }

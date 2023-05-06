@@ -50,7 +50,11 @@ export default function Home(props: Props) {
     }, []);
 
     useEffect(() => {
-      axios.get(API_ENDPOINT + '/api/articles')
+      axios.get(API_ENDPOINT + '/api/articles', {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
       .then((res) => {
         setArticles(res.data.data);
         setIsLoading(false);
@@ -69,7 +73,10 @@ export default function Home(props: Props) {
                     </div>
                 )}
             </div> */}
-            
+          
+    const _void = () => {
+
+    }
           
     const navigate = useNavigate();
 
@@ -91,34 +98,35 @@ export default function Home(props: Props) {
             <div className={styles.wrapper()}>
                 <div className={styles.topbar()}>
                     <div className={styles.left()} >
-                      <div className={styles.elements()} style={{display
-                      : "flex"}} onClick={goDashboard}>
-                        <HiOutlineViewList />
-                        Dashboard
-                      </div>
+                      {
+                        isLogged
+                        ?
+                          <div className={styles.elements()} style={{display
+                          : "flex"}} onClick={goDashboard}>
+                            <HiOutlineViewList />
+                            Dashboard
+                          </div>
+                          :
+                          <></>
+                      }
+                     
                     </div>
                     <div className={styles.center()}>
                       <div>Article</div>
                     </div>
                     <div className={styles.right()} >
-                      <div className={styles.elements()} onClick={goLogin}>Log Out</div>
+                      {
+                        isLogged
+                        ?
+                        <div className={styles.elements()} onClick={logout}>Log Out</div>
+                        :
+                      <div className={styles.elements()} onClick={goLogin}>Log In</div>
+                      }
                     </div>
-                    <div className={styles.center()}>Article</div>
-                    {
-                      isLogged 
-                      ?
-                      <>
-                      <div className={styles.right()} onClick={goDashboard}>Dashboard</div>
-                      <span style={{ width: 20 }}></span>
-                      <div className={styles.right()} onClick={logout}>Logout</div>
-                      </>
-                      :
-                      <div className={styles.right()} onClick={goLogin}>Login</div>
-                    }
                 </div>
                 <div className={styles.content()}>
                   {display && (
-                    <CreateDisplay onClose={handleDisplay} message={""} />
+                    <CreateDisplay onSave={_void} onClose={handleDisplay} message={""} />
                   )}
                   {
                     isLoadingError 
@@ -132,7 +140,7 @@ export default function Home(props: Props) {
                       :
                       articles.map((article: any, idx: any) => {
                         return (
-                            <Cards isLogged={isLogged} id={article.id} title={article.title} component={""} />
+                            <Cards isLogged={isLogged} id={article.id} title={article.title} isLiked={article.isLiked} component={""} />
                         )
                       })
                     )

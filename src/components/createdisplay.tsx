@@ -8,6 +8,7 @@ const Cookie = require("js-cookie");
 interface Props {
   message: string;
   onClose: () => void;
+  onSave: () => void;
 }
 
 export default function CreateDisplay(props: Props){
@@ -29,7 +30,7 @@ export default function CreateDisplay(props: Props){
     }
 
     const handleSaveButtonClick = () => {
-      axios.post(API_ENDPOINT + '/api/articles', {
+      axios.post(API_ENDPOINT + '/api/dashboard/articles', {
         title: title,
         body: content,
       }, {
@@ -48,7 +49,8 @@ export default function CreateDisplay(props: Props){
           return;
         }
         alert('Internal server error');
-      })
+      });
+      props.onSave();
     }
 
     return (

@@ -5,6 +5,7 @@ import Cards from "../components/card";
 import CreateDisplay from "../components/createdisplay";
 import axios from "axios";
 import EditDisplay from "../components/editarticle";
+const Cookie = require("js-cookie");
 const { API_ENDPOINT } = require("../config");
 
 interface Props {};
@@ -21,7 +22,11 @@ export default function MyArticle(props: Props) {
     }
 
     useEffect(() => {
-      axios.get(API_ENDPOINT + '/api/articles')
+      axios.get(API_ENDPOINT + '/api/dashboard/articles', {
+        headers: {
+          'Authorization': Cookie.get('token'),
+        }
+      })
       .then((res) => {
         setArticles(res.data.data);
         setIsLoading(false);
@@ -29,17 +34,26 @@ export default function MyArticle(props: Props) {
       .catch((err) => {
         setIsLoadingError(true);
       })
-    }, []);
+    }, [isLoading]);
 
     const [display, setDisplay] = useState(false);
+    const [editDisplay, setEditDisplay] = useState(false);
 
     const handleDisplay = () => {
         setDisplay(!display);
     };
+    const handleEditDisplay = () => {
+      setEditDisplay(!editDisplay);
+  };
 
     const deleteArticle = () => {
+      setIsLoading(true);
       alert("deleted :)");
     };
+
+    const afterSaved = () => {
+      setIsLoading(true);
+    }
 
     return (
         <div className={styles.body()}>
@@ -47,21 +61,21 @@ export default function MyArticle(props: Props) {
                 <div className={styles.topbar()}>
                     <div className={styles.center()}>My Article</div>
                 </div>
-                <div className={styles.button()}><button className={styles.buttonstyle()} onClick={handleDisplay}>Add New</button></div>
                 <div className={styles.filter()}>
                   <input name="filter" id="filter" className={styles.checkbox()} type="checkbox" checked={filterFavorite} onChange={onFilterChange} />
                   <label htmlFor="filter" style={{marginLeft: 8}}>Filter favorite</label>
                 </div>
-
-                <div className={styles.button()}><button style={{marginLeft: "auto", width: "100px", height: "30px", backgroundColor: "#2de81c", borderRadius: 10, border: "none", color: "white"}} onClick={handleDisplay}>Add New</button></div>
+                <div className={styles.row()}>
+                  <div className={styles.button()}><button style={{marginLeft: "auto", width: "100px", height: "30px", backgroundColor: "#2de81c", borderRadius: 10, border: "none", color: "white"}} onClick={handleDisplay}>Add New</button></div>
+                </div>
                 <div className={styles.content()}>
                   {display && (
-                    <CreateDisplay onClose={handleDisplay} message={""} />
+                    <CreateDisplay onSave={afterSaved} onClose={handleDisplay} message={""} />
                   )}
-
+{/* 
                   {
-                    display && <EditDisplay onClose={handleDisplay} message={""} articleId={""} />
-                  }
+                    editDisplay && <EditDisplay onClose={handleEditDisplay} message={""} articleId={""} />
+                  } */}
                   {
                     isLoadingError 
                     ?
@@ -74,7 +88,7 @@ export default function MyArticle(props: Props) {
                       :
                       articles.map((article: any, idx: any) => {
                         return (
-                            <Cards isLogged={true} title={article.title} id={article.id} component={"edit"} onDelete={deleteArticle} onEdit={handleDisplay}/>
+                            <Cards isLiked={true} isLogged={true} title={article.title} id={article.id} component={"edit"} onDelete={deleteArticle} onEdit={handleEditDisplay}/>
                         )
                       })
                     )
@@ -91,6 +105,10 @@ const styles = {
       height: '100vh',
       display: 'flex',
       margin: '0 auto',
+    }),
+    row: css({
+      display: "flex",
+      margin: "0 auto",
     }),
     wrapper: css({
       display: "block",
@@ -141,9 +159,7 @@ const styles = {
       "@media screen and (max-width: 768px)": {
       gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
     },
-      padding: 15,
       paddingTop: 10,
-      display: "flex",
       flexWrap: "wrap",
     }),
     filter: css({
@@ -152,6 +168,5 @@ const styles = {
     checkbox: css({
       background: "yellow",
       margin: "0 auto",
->>>>>>> Stashed changes
     })
   };

@@ -3,6 +3,9 @@ import { useState } from "react";
 import { css } from "../styles/styles";
 import { FaHeart, FaRegHeart, FaEdit, FaTrash, FaComment } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+const { API_ENDPOINT } = require("../config");
+const Cookie = require("js-cookie");
 
 interface Props {
     title: string,
@@ -11,6 +14,7 @@ interface Props {
     onEdit: () => void;
     onDelete: () => void;
     isLogged: boolean,
+    isLiked: boolean,
     // color?: string,
     // onClick: (e: any) => void,
 };
@@ -23,17 +27,47 @@ Cards.defaultProps = {
     
 
 export default function Cards(props: Props){
+    console.log(props);
     const navigate = useNavigate();
 
-    const [liked, setLiked] = useState(false);
+    const [liked, setLiked] = useState(props.isLiked);
   
     const handleClick = () => {
         if (!props.isLogged) {
             navigate('/login');
         } else {
+            axios.patch(API_ENDPOINT + '/api/articles/like/' + props.id, {
+                isLiked: !liked,
+            }, {
+                headers: {
+                    'Authorization': Cookie.get('token'),
+                }
+            })
+            .then((res) => {
+
+            })
+            .catch((err) => {
+                alert("Internal server error");
+            })
             setLiked(!liked);
         }
     };
+
+    const deleteArticle = () => {
+        axios.delete(API_ENDPOINT + '/api/dashboard/articles/' + props.id, {
+            headers: {
+                'Authorization': Cookie.get('token'),
+            }
+        })
+        .then((res) => {
+
+        })
+        .catch((err) => {
+            console.log(err);
+            alert("Internal server error");
+        })
+        props.onDelete();
+    }
 
 
 
@@ -42,10 +76,10 @@ export default function Cards(props: Props){
             case 'edit':
                 return (
                     <div>
-                        <span onClick={props.onEdit}>
+                        {/* <span onClick={props.onEdit}>
                             <FaEdit color="gray" size={25} style={{margin: "0 5"}} />
-                        </span>
-                        <span onClick={props.onEdit}>
+                        </span> */}
+                        <span onClick={deleteArticle}>
                             <FaTrash color="gray" size={25} style={{margin: "0 5"}} />
                         </span>
                     </div>

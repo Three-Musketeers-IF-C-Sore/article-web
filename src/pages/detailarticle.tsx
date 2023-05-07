@@ -64,6 +64,9 @@ export default function Article(props: Props){
     }
 
     const handleSendComment = () => {
+      if (userId === undefined) {
+        navigate('/login');
+      }
       if (commentInput === '') alert("comment is required");
       setCommentInput("");
       setIsLoading(true);
@@ -123,9 +126,16 @@ export default function Article(props: Props){
                   <div className={styles.author()}>
                     Created by: {data.author.name}
                   </div>{/* untuk isi data author */}
-                  <span onClick={handleEditDisplay}>
-                    <FaEdit color="gray" size={25} style={{margin: "0 5"}} />
-                  </span>
+                  {
+                    data.author.id === userId
+                    ?
+                    <span onClick={handleEditDisplay}>
+                      <FaEdit color="gray" size={25} style={{margin: "0 5"}} />
+                    </span>
+                    :
+                    <></>
+                  }
+
                   <div className={styles.text()}>{/* untuk isi data author */}
                     {data.body}
                   </div>

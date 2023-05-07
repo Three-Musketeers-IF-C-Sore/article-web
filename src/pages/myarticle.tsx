@@ -4,7 +4,6 @@ import { css } from "../styles/styles";
 import Cards from "../components/card";
 import CreateDisplay from "../components/createdisplay";
 import axios from "axios";
-import EditDisplay from "../components/editarticle";
 const Cookie = require("js-cookie");
 const { API_ENDPOINT } = require("../config");
 
@@ -22,7 +21,7 @@ export default function MyArticle(props: Props) {
     }
 
     useEffect(() => {
-      axios.get(API_ENDPOINT + '/api/dashboard/articles', {
+      axios.get(API_ENDPOINT + '/api/dashboard/articles?favorite=' + filterFavorite, {
         headers: {
           'Authorization': Cookie.get('token'),
         }
@@ -34,7 +33,7 @@ export default function MyArticle(props: Props) {
       .catch((err) => {
         setIsLoadingError(true);
       })
-    }, [isLoading]);
+    }, [isLoading, filterFavorite]);
 
     const [display, setDisplay] = useState(false);
     const [editDisplay, setEditDisplay] = useState(false);
